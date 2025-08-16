@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ba_textfield_fill">#1F2937</color>  <!-- fondo campos (oscuro) -->
+    <color name="ba_card_bg">#111827</color>         <!-- tarjeta login oscura -->
+    <color name="ba_bg">#0B1220</color>              <!-- fondo pantalla oscuro -->
+</resources>

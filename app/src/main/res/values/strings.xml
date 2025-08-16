@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">BusinessAssistantAndroid</string>
+    <string name="app_name">Business Assistant</string>
+    <string name="login_title">SUPERMARKET</string>
+    <string name="login_subtitle_1">Business Assistant</string>
+    <string name="login_subtitle_2">Asistente de negocio en supermercados</string>
+    <string name="hint_email">Usuario</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="action_login">Ingresar</string>
+    <string name="forgot_password">Olvidé mi contraseña</string>
+    <string name="desc_toggle_theme">Cambiar tema</string>
+    <string name="desc_logo">Carrito</string>
+
 </resources>
