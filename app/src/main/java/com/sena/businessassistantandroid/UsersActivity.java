@@ -75,6 +75,7 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, WelcomeActivity.class));
             } else if (id == R.id.nav_users) {
+                // ya estamos aquí
             }
             drawerLayout.closeDrawer(navigationView);
             return true;
@@ -218,11 +219,7 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                 }
 
                 if (editing) {
-                    userToEdit.name = name;
-                    userToEdit.email = email;
-                    userToEdit.role = role;
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
+                    updateUserOnApi(userToEdit.id, name, email, role, dialog);
                 } else {
                     createUserOnApi(name, email, role, pass, dialog);
                 }
@@ -241,7 +238,7 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
             return;
         }
 
-        User newUser = new User(null, name, email, role, password);
+        User newUser = new User(0, name, email, role, password);
 
         userApi.createUser("Bearer " + token, newUser).enqueue(new Callback<User>() {
             @Override
@@ -256,6 +253,41 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                         Toast.makeText(UsersActivity.this, err, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(UsersActivity.this, "Error al crear usuario", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(UsersActivity.this, "Fallo de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUserOnApi(int id, String name, String email, String role, AlertDialog dialog) {
+        SharedPreferences sp = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String token = sp.getString("auth_token", null);
+
+        if (token == null) {
+            Toast.makeText(this, "No hay token, inicia sesión primero", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User updatedUser = new User(id, name, email, role, null);
+
+        userApi.updateUser("Bearer " + token, id, updatedUser).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    loadUsers();
+                    Toast.makeText(UsersActivity.this, "Usuario actualizado con éxito", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                } else {
+                    try {
+                        String err = response.errorBody() != null ? response.errorBody().string() : "Error al actualizar usuario";
+                        Toast.makeText(UsersActivity.this, err, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(UsersActivity.this, "Error al actualizar usuario", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
