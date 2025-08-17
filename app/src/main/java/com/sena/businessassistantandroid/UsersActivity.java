@@ -19,11 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.sena.businessassistantandroid.users.FakeUserRepository;
+import com.sena.businessassistantandroid.network.RetrofitClient;
+import com.sena.businessassistantandroid.network.UserApi;
 import com.sena.businessassistantandroid.users.User;
 import com.sena.businessassistantandroid.users.UsersAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UsersActivity extends AppCompatActivity implements UsersAdapter.Callbacks {
 
@@ -36,7 +42,9 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
     private View btnAddUser;
     private RecyclerView rv;
     private UsersAdapter adapter;
-    private FakeUserRepository repo;
+    private List<User> users = new ArrayList<>();
+
+    private UserApi userApi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,20 +86,53 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
         });
 
         // Modo claro/oscuro
-        // Actualizar icono según el tema guardado
         updateDarkModeIcon(savedMode);
         btnThemeToggle.setOnClickListener(v -> toggleTheme());
 
-        // Lista de usuarios
-        repo = new FakeUserRepository();
-        List<User> data = repo.getAll();
+        // Retrofit API
+        userApi = RetrofitClient.getInstance().create(UserApi.class);
 
-        adapter = new UsersAdapter(data, this);
+        // Adapter vacío
+        adapter = new UsersAdapter(users, this);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
 
+        // Cargar usuarios desde el API
+        loadUsers();
+
         // Botón agregar usuario
         btnAddUser.setOnClickListener(v -> showUserForm(null));
+    }
+
+    /**
+     * Cargar usuarios desde el API
+     */
+    private void loadUsers() {
+        SharedPreferences sp = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String token = sp.getString("auth_token", null);
+
+        if (token == null) {
+            Toast.makeText(this, "No hay token, inicia sesión primero", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userApi.getUsers("Bearer " + token).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    users.clear();
+                    users.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(UsersActivity.this, "Error al obtener usuarios", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(UsersActivity.this, "Fallo de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -103,16 +144,12 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                 ? AppCompatDelegate.MODE_NIGHT_NO
                 : AppCompatDelegate.MODE_NIGHT_YES;
 
-        // Guardar en preferencias
         getSharedPreferences(PREFS, MODE_PRIVATE)
                 .edit()
                 .putInt(KEY_NIGHT_MODE, next)
                 .apply();
 
-        // Aplicar tema
         AppCompatDelegate.setDefaultNightMode(next);
-
-        // Recargar para aplicar cambios inmediatamente
         recreate();
     }
 
@@ -140,7 +177,7 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                 .setTitle(R.string.delete)
                 .setMessage(R.string.confirm_delete)
                 .setPositiveButton(R.string.delete, (d, w) -> {
-                    repo.delete(u);
+                    users.remove(u);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(this, R.string.deleted_success, Toast.LENGTH_SHORT).show();
                 })
@@ -150,7 +187,6 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
 
     @Override
     public void onActivate(User u) {
-        // Mostrar modal con info del usuario
         String info = "Nombre: " + u.name + "\n"
                 + "Email: " + u.email + "\n"
                 + "Rol: " + u.role;
@@ -172,7 +208,6 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
 
         boolean editing = userToEdit != null;
 
-        // Si estoy editando, oculto la contraseña
         if (editing) {
             etName.setText(userToEdit.name);
             etEmail.setText(userToEdit.email);
@@ -203,11 +238,11 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                         userToEdit.name = name;
                         userToEdit.email = email;
                         userToEdit.role = role;
-                        repo.update(userToEdit);
+                        adapter.notifyDataSetChanged();
                     } else {
-                        repo.add(new User(0, name, email, role, pass));
+                        users.add(new User(0, name, email, role, pass));
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.notifyDataSetChanged();
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();

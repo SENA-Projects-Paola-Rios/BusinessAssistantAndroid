@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
             String pass  = etPassword.getText() != null ? etPassword.getText().toString() : "";
 
+            
+
             if (TextUtils.isEmpty(email)) {
                 etEmail.setError("Ingrese el usuario (email)");
                 etEmail.requestFocus();
