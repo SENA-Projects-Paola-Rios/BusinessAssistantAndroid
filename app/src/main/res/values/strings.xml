@@ -9,5 +9,14 @@
     <string name="forgot_password">Olvidé mi contraseña</string>
     <string name="desc_toggle_theme">Cambiar tema</string>
     <string name="desc_logo">Carrito</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_users">Usuarios</string>
+    <string name="nav_categories">Categorías</string>
+    <string name="nav_products">Productos</string>
+    <string name="nav_sales">Ventas</string>
+    <string name="nav_reports">Reportes</string>
+    <string name="nav_logout">Cerrar Sesión</string>
+    <string name="menu">Menú</string>
+    <string name="mode_toggle">Cambiar modo</string>
 
 </resources>

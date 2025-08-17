@@ -1,5 +1,6 @@
 package com.sena.businessassistantandroid;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,8 +90,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Aquí luego se hará la conexión con el backend.
-            Toast.makeText(this, "Inicio de sesión exitoso (simulado)", Toast.LENGTH_SHORT).show();
-M
+            Toast.makeText(MainActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+            finish(); 
         });
     }
 

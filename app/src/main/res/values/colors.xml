@@ -3,4 +3,10 @@
     <color name="ba_textfield_fill">#EAF1FF</color>  <!-- fondo campos (claro) -->
     <color name="ba_card_bg">#FFFFFF</color>         <!-- tarjeta login -->
     <color name="ba_bg">#F3F4F6</color>             <!-- fondo de pantalla claro -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#7D7D7D</color> <!-- Gris ratón -->
+    <color name="colorPrimaryDark">#5C5C5C</color> <!-- Variante más oscura -->
+    <color name="colorAccent">#BDBDBD</color> <!-- Acento suave -->
+    <color name="background">#F5F5F5</color> <!-- Fondo claro -->
 </resources>

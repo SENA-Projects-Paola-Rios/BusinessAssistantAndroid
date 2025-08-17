@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color en modo deshabilitado -->
+    <item android:color="?attr/colorOnSurfaceVariant" android:state_enabled="false"/>
+    <!-- Color en modo normal -->
+    <item android:color="?attr/colorOnSurface"/>
+</selector>
