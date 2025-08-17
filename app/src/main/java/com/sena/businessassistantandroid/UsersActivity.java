@@ -157,9 +157,31 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
                 .setTitle(R.string.delete)
                 .setMessage(R.string.confirm_delete)
                 .setPositiveButton(R.string.delete, (d, w) -> {
-                    users.remove(u);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(this, R.string.deleted_success, Toast.LENGTH_SHORT).show();
+                    SharedPreferences sp = getSharedPreferences("app_prefs", MODE_PRIVATE);
+                    String token = sp.getString("auth_token", null);
+
+                    if (token == null) {
+                        Toast.makeText(this, "No hay token, inicia sesión primero", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    userApi.deleteUser("Bearer " + token, u.id).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                users.remove(u);
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(UsersActivity.this, "Usuario eliminado con éxito", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(UsersActivity.this, "Error al eliminar usuario", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(UsersActivity.this, "Fallo de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
