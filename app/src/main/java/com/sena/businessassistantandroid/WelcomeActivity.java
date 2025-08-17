@@ -1,5 +1,6 @@
 package com.sena.businessassistantandroid;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -72,6 +73,17 @@ public class WelcomeActivity extends AppCompatActivity {
             // Actualizar ícono sin necesidad de recrear
             updateDarkModeIcon(nextMode);
         });
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_users) {
+                startActivity(new Intent(this, UsersActivity.class));
+                drawerLayout.closeDrawer(navigationView);
+                return true;
+            }
+            return false;
+        });
+
     }
 
     private void updateDarkModeIcon(int mode) {

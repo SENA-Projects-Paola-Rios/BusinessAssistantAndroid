@@ -19,4 +19,37 @@
     <string name="menu">Menú</string>
     <string name="mode_toggle">Cambiar modo</string>
 
+    <!-- Usuarios -->
+    <string name="users_title">Usuarios</string>
+    <string name="users_add">Agregar Usuario</string>
+
+    <!-- Acordeón / detalle -->
+    <string name="user_id_label">ID:</string>
+    <string name="user_name_label">Nombre:</string>
+    <string name="user_email_label">Email:</string>
+    <string name="user_role_label">Rol:</string>
+    <string name="actions_label">Acciones:</string>
+
+    <!-- Acciones -->
+    <string name="view_user">Ver usuario</string>
+    <string name="user_edit">Editar usuario</string>
+    <string name="user_delete">Eliminar usuario</string>
+
+    <!-- Form -->
+    <string name="user_info">Información del Usuario</string>
+    <string name="user_name">Nombre</string>
+    <string name="user_email">Email</string>
+    <string name="user_role">Rol</string>
+    <string name="password">Contraseña</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+
+    <string name="delete">Eliminar</string>
+    <string name="confirm_delete">¿Estás seguro de que deseas eliminar este usuario?</string>
+    <string name="edit">Editar</string>
+    <string name="ok">OK</string>
+    <string name="deleted_success">Usuario eliminado correctamente</string>
+    <string name="fill_all_fields">Debes completar todos los campos</string>
+    <string name="must_enter_password">Debes ingresar una contraseña</string>
+
 </resources>
