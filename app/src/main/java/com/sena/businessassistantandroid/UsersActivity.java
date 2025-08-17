@@ -260,7 +260,7 @@ public class UsersActivity extends AppCompatActivity implements UsersAdapter.Cal
             return;
         }
 
-        User newUser = new User(0, name, email, role, password);
+        User newUser = new User(null, name, email, role, password);
 
         userApi.createUser("Bearer " + token, newUser).enqueue(new Callback<User>() {
             @Override
