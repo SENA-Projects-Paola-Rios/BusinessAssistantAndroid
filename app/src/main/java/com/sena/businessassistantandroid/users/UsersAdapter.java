@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sena.businessassistantandroid.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.VH> {
@@ -26,11 +27,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.VH> {
     private final Callbacks callbacks;
 
     public UsersAdapter(List<User> items, Callbacks callbacks) {
-        this.items = items;
+        // inicializamos lista segura por si viene null
+        this.items = (items != null) ? items : new ArrayList<>();
         this.callbacks = callbacks;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_user_row, parent, false);
@@ -64,7 +67,19 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.VH> {
         h.btnActivate.setOnClickListener(v -> callbacks.onActivate(u));
     }
 
-    @Override public int getItemCount() { return items.size(); }
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    // 🔥 Método para refrescar los datos luego de crear/editar/eliminar un usuario
+    public void updateData(List<User> newItems) {
+        items.clear();
+        if (newItems != null) {
+            items.addAll(newItems);
+        }
+        notifyDataSetChanged();
+    }
 
     static class VH extends RecyclerView.ViewHolder {
         View header, detail;

@@ -1,14 +1,16 @@
 package com.sena.businessassistantandroid.users;
 
 public class User {
-    public int id;
+    public Integer id;
     public String name;
     public String email;
     public String role;
     private String password;
-    public boolean expanded = false; // para el acordeón
+    public boolean expanded = false;
 
-    public User(int id, String name, String email, String role, String password) {
+    public User() { }
+
+    public User(Integer id, String name, String email, String role, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
